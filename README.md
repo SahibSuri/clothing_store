@@ -71,16 +71,11 @@ Open `.env` and update:
 
 ```env
 PORT=3000
-MONGO_URI=mongodb://localhost:27017/brandstation
+MONGO_URI=
 SESSION_SECRET=change_this_to_a_random_string_please
-ADMIN_EMAIL=admin@brandstation.com
-ADMIN_PASSWORD=Admin@123
-WHATSAPP_NUMBER=919205228939
-```
-
-**For MongoDB Atlas** (cloud), replace `MONGO_URI` with your Atlas connection string:
-```
-MONGO_URI=mongodb+srv://user:password@cluster.mongodb.net/brandstation
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+WHATSAPP_NUMBER=
 ```
 
 ---
@@ -341,14 +336,6 @@ You reply and complete the sale! 💰
 
 ---
 
-## 📱 Mobile Support
-
-Tested and optimised for:
-- iPhone SE / 12 / 14 Pro
-- Samsung Galaxy S series
-- iPad / iPad Pro
-- Desktop 1920×1080+
-
 ---
 
-*Built with ❤️ using Node.js + Express + MongoDB + EJS*
+*Built with using Node.js + Express + MongoDB + EJS*
