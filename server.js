@@ -23,6 +23,7 @@ const app = express();
 // ── View Engine ──────────────────────────────────────────────
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.set('trust proxy', 1);
 
 // ── Core Middleware ──────────────────────────────────────────
 app.use(express.urlencoded({ extended: true }));
@@ -42,7 +43,7 @@ app.use(session({
     cookie: {
         maxAge:   1000 * 60 * 60 * 24,   // 24 hours
         httpOnly: true,
-        secure:   process.env.NODE_ENV === 'production'
+        secure:   false
     }
 }));
 

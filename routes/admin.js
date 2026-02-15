@@ -13,15 +13,31 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const admin = await Admin.findOne({ email });
-    if (!admin || !(await admin.comparePassword(password))) {
-        req.flash('error', 'Invalid email or password');
-        return res.redirect('/admin/login');
+    try {
+        const { email, password } = req.body;
+        const admin = await Admin.findOne({ email: email.toLowerCase().trim() });
+
+        if (!admin || !(await admin.comparePassword(password))) {
+            req.flash('error', 'Invalid email or password');
+            return res.redirect('/admin/login');
+        }
+
+        req.session.admin = { id: admin._id, email: admin.email };
+
+        // Explicitly save session before redirecting (fixes Render session issue)
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                req.flash('error', 'Login failed, please try again');
+                return res.redirect('/admin/login');
+            }
+            res.redirect('/admin/dashboard');
+        });
+    } catch (err) {
+        console.error('Login error:', err);
+        req.flash('error', 'Something went wrong');
+        res.redirect('/admin/login');
     }
-    req.session.admin = { id: admin._id, email: admin.email };
-    req.flash('success', 'Welcome back! 👋');
-    res.redirect('/admin/dashboard');
 });
 
 // ── LOGOUT ────────────────────────────────────────────────────
