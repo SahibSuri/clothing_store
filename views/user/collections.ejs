@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<section class="page-hero page-hero--small">
+    <h1>Collections</h1>
+    <p>Discover premium fashion curated for the conscious consumer</p>
+</section>
+
+<!-- FILTERS -->
+<section class="filters-bar">
+    <div class="filters-inner">
+        <div class="category-pills">
+            <a href="/collections" class="pill <%= !category ? 'pill--active' : '' %>">All</a>
+            <% categories.forEach(function(cat) { %>
+            <a href="/collections?category=<%= cat %>" class="pill <%= category === cat ? 'pill--active' : '' %>"><%= cat %></a>
+            <% }) %>
+        </div>
+        <div class="sort-box">
+            <select id="sortSelect" onchange="applySort(this.value)">
+                <option value="" <%= !sort ? 'selected' : '' %>>Newest</option>
+                <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Price: Low–High</option>
+                <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Price: High–Low</option>
+            </select>
+        </div>
+    </div>
+</section>
+
+<!-- PRODUCTS GRID -->
+<section class="section">
+    <% if (products.length === 0) { %>
+        <div class="empty-state">
+            <p>No products found in this category.</p>
+            <a href="/collections" class="btn-primary">View All</a>
+        </div>
+    <% } else { %>
+    <div class="products-grid">
+        <% products.forEach(function(product) { %>
+        <div class="product-card" data-id="<%= product._id %>">
+            <a href="/collections/<%= product._id %>" class="product-img-wrap">
+                <% if (product.images && product.images.length > 0) { %>
+                    <img src="<%= product.images[0] %>" alt="<%= product.name %>">
+                <% } else { %>
+                    <div class="img-placeholder"><%= product.category %></div>
+                <% } %>
+                <span class="product-hover-text">View Details</span>
+            </a>
+            <div class="product-info">
+                <span class="product-brand"><%= product.brand || product.category %></span>
+                <h3><%= product.name %></h3>
+                <p class="product-price"><%= product.price %></p>
+
+                <!-- Color swatches preview -->
+                <div class="color-swatches">
+                    <% product.colors.slice(0,4).forEach(function(c) { %>
+                        <span class="swatch" style="background:<%= c.hex %>;" title="<%= c.name %>"></span>
+                    <% }) %>
+                    <% if (product.colors.length > 4) { %>
+                        <span class="swatch-more">+<%= product.colors.length - 4 %></span>
+                    <% } %>
+                </div>
+
+                <!-- Inline buy options -->
+                <div class="inline-options" data-product="<%= product.name %>" data-price="<%= product.price %>">
+                    <div class="inline-sizes">
+                        <% product.sizes.forEach(function(s) { %>
+                            <button class="sz-btn" data-size="<%= s %>"><%= s %></button>
+                        <% }) %>
+                    </div>
+                    <button class="btn-buy-now">Buy Now via WhatsApp</button>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+    <% } %>
+</section>
+
+<a href="https://wa.me/<%= whatsapp %>" class="whatsapp-float" target="_blank" aria-label="WhatsApp">
+    <svg viewBox="0 0 32 32"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.837.745 5.496 2.048 7.798L0 32l8.398-2.048A15.935 15.935 0 0 0 16 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.356 21.957c-.403-.201-2.382-1.175-2.751-1.309-.369-.134-.637-.201-.906.201-.268.403-1.041 1.309-1.276 1.578-.235.268-.47.302-.873.101-.403-.201-1.701-.628-3.24-2.001-1.198-1.068-2.007-2.388-2.242-2.791-.235-.403-.025-.621.176-.822.181-.181.403-.47.604-.706.201-.235.268-.403.403-.672.134-.268.067-.502-.034-.706-.101-.201-.906-2.184-1.242-2.99-.327-.784-.66-.678-.906-.69-.235-.012-.502-.015-.77-.015s-.706.101-1.075.502c-.369.403-1.409 1.377-1.409 3.358s1.443 3.896 1.644 4.164c.201.268 2.837 4.332 6.874 6.074.961.415 1.711.663 2.296.848.965.307 1.843.264 2.537.16.774-.116 2.382-.974 2.717-1.914.335-.94.335-1.746.235-1.914-.101-.168-.369-.268-.772-.47z"/></svg>
+</a>
+
+<%- include('../partials/footer') %>
+<script>
+const WA = '<%= whatsapp %>';
+function applySort(val) {
+    const url = new URL(window.location);
+    if (val) url.searchParams.set('sort', val); else url.searchParams.delete('sort');
+    window.location = url;
+}
+</script>
+<script src="/js/main.js"></script>
+</body>
+</html>

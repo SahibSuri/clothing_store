@@ -1,0 +1,16 @@
+<aside class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-brand">
+        <span>🛍️</span>
+        <div><strong>Brand Station</strong><small>Admin Panel</small></div>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="/admin/dashboard" class="sn-item <%= title==='Dashboard'?'sn-active':'' %>"><span>📊</span>Dashboard</a>
+        <a href="/admin/products"  class="sn-item <%= title==='Products'?'sn-active':'' %>"><span>🛍️</span>Products</a>
+        <a href="/admin/products/new" class="sn-item <%= title==='Add Product'?'sn-active':'' %>"><span>➕</span>Add Product</a>
+        <a href="/admin/settings" class="sn-item <%= title==='Settings'?'sn-active':'' %>"><span>⚙️</span>Settings</a>
+        <a href="/" target="_blank" class="sn-item"><span>🌐</span>View Store</a>
+    </nav>
+    <div class="sidebar-footer">
+        <a href="/admin/logout" class="sn-logout"><span>🚪</span>Logout</a>
+    </div>
+</aside>

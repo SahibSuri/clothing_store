@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products – Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+<%- include('./partials/admin-sidebar') %>
+<div class="admin-main">
+    <%- include('./partials/admin-header', { pageTitle: 'All Products' }) %>
+    <%- include('../partials/flash') %>
+
+    <div class="admin-content">
+        <!-- Search/Filter Bar -->
+        <div class="list-toolbar">
+            <form method="GET" action="/admin/products" class="search-form">
+                <input type="text" name="q" value="<%= q %>" placeholder="Search products...">
+                <select name="category">
+                    <option value="">All Categories</option>
+                    <option value="Sportswear" <%= category==='Sportswear'?'selected':'' %>>Sportswear</option>
+                    <option value="Essentials" <%= category==='Essentials'?'selected':'' %>>Essentials</option>
+                    <option value="Streetwear" <%= category==='Streetwear'?'selected':'' %>>Streetwear</option>
+                </select>
+                <button type="submit" class="btn-sm">Filter</button>
+                <a href="/admin/products" class="btn-sm btn-ghost">Reset</a>
+            </form>
+            <a href="/admin/products/new" class="btn-primary-sm">+ Add Product</a>
+        </div>
+
+        <!-- Products Table -->
+        <div class="table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Image</th><th>Name</th><th>Category</th>
+                        <th>Price</th><th>Colors</th><th>Sizes</th>
+                        <th>Status</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (products.length === 0) { %>
+                    <tr><td colspan="8" class="empty-row">No products found. <a href="/admin/products/new">Add one!</a></td></tr>
+                    <% } %>
+                    <% products.forEach(function(p) { %>
+                    <tr>
+                        <td>
+                            <% if (p.images && p.images.length > 0) { %>
+                                <img src="<%= p.images[0] %>" class="table-thumb" alt="<%= p.name %>">
+                            <% } else { %>
+                                <div class="table-thumb-placeholder">IMG</div>
+                            <% } %>
+                        </td>
+                        <td><strong><%= p.name %></strong><br><small class="text-muted"><%= p.brand %></small></td>
+                        <td><span class="badge badge-<%= p.category.toLowerCase() %>"><%= p.category %></span></td>
+                        <td><strong><%= p.price %></strong></td>
+                        <td>
+                            <div class="mini-swatches">
+                                <% p.colors.slice(0,4).forEach(function(c){ %>
+                                    <span class="mini-swatch" style="background:<%= c.hex %>;" title="<%= c.name %>"></span>
+                                <% }) %>
+                            </div>
+                        </td>
+                        <td class="sizes-cell"><%= p.sizes.join(', ') %></td>
+                        <td>
+                            <label class="toggle-label">
+                                <input type="checkbox" class="toggle-cb" data-id="<%= p._id %>" <%= p.active ? 'checked' : '' %>>
+                                <span class="toggle-slider-sm"></span>
+                            </label>
+                        </td>
+                        <td>
+                            <div class="row-actions">
+                                <a href="/admin/products/<%= p._id %>/edit" class="ra-btn ra-edit">Edit</a>
+                                <form method="POST" action="/admin/products/<%= p._id %>?_method=DELETE" class="inline-form" onsubmit="return confirm('Delete this product?')">
+                                    <button type="submit" class="ra-btn ra-del">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>

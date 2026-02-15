@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-login-body">
+<%- include('../partials/flash') %>
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="login-brand">🛍️<span>Brand Station</span></div>
+        <h2>Admin Login</h2>
+        <p class="login-sub">Sign in to manage your store</p>
+        <form action="/admin/login" method="POST" class="login-form">
+            <div class="field"><label>Email Address</label><input type="email" name="email" placeholder="admin@brandstation.com" required autofocus></div>
+            <div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" required></div>
+            <button type="submit" class="btn-signin">Sign In →</button>
+        </form>
+        <a href="/" class="back-link">← Back to Store</a>
+    </div>
+</div>
+<script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<%- include('../partials/navbar') %>
+
+<section class="product-detail-section">
+    <div class="product-detail-container">
+        <!-- IMAGE GALLERY -->
+        <div class="product-gallery">
+            <div class="main-img-wrap" id="mainImgWrap">
+                <% if (product.images && product.images.length > 0) { %>
+                    <img id="mainImg" src="<%= product.images[0] %>" alt="<%= product.name %>">
+                <% } else { %>
+                    <div class="img-placeholder big"><%= product.category %></div>
+                <% } %>
+            </div>
+            <% if (product.images && product.images.length > 1) { %>
+            <div class="thumbnails">
+                <% product.images.forEach(function(img, i) { %>
+                    <img src="<%= img %>" alt="View <%= i+1 %>" class="thumb <%= i===0?'thumb--active':'' %>" onclick="switchImg(this, '<%= img %>')">
+                <% }) %>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- PRODUCT INFO -->
+        <div class="product-info-panel">
+            <p class="product-cat-tag"><%= product.category %> / <% if (product.brand) { %><%= product.brand %><% } %></p>
+            <h1 class="product-detail-title"><%= product.name %></h1>
+            <p class="product-detail-price"><%= product.price %></p>
+            <p class="product-detail-desc"><%= product.description %></p>
+
+            <!-- COLOR SELECTOR -->
+            <div class="selector-group">
+                <label>Color: <strong id="selectedColorName"><%= product.colors[0]?.name || '' %></strong></label>
+                <div class="color-picker">
+                    <% product.colors.forEach(function(c, i) { %>
+                        <button class="color-btn <%= i===0?'color-btn--active':'' %>"
+                                data-color="<%= c.name %>"
+                                style="background:<%= c.hex %>;"
+                                title="<%= c.name %>"
+                                onclick="selectColor(this)">
+                        </button>
+                    <% }) %>
+                </div>
+            </div>
+
+            <!-- SIZE SELECTOR -->
+            <div class="selector-group">
+                <label>Size:</label>
+                <div class="size-picker">
+                    <% product.sizes.forEach(function(s, i) { %>
+                        <button class="size-btn <%= i===0?'size-btn--active':'' %>"
+                                data-size="<%= s %>"
+                                onclick="selectSize(this)">
+                            <%= s %>
+                        </button>
+                    <% }) %>
+                </div>
+            </div>
+
+            <!-- BUY NOW -->
+            <button class="btn-buynow-lg" id="buyNowBtn"
+                    data-product="<%= product.name %>"
+                    data-price="<%= product.price %>"
+                    data-wa="<%= whatsapp %>">
+                🛍️ Buy Now via WhatsApp
+            </button>
+
+            <p class="buy-note">Tap to open WhatsApp with your order details pre-filled.</p>
+
+            <!-- FEATURES LIST -->
+            <ul class="features-list">
+                <li>✓ Premium quality certified materials</li>
+                <li>✓ Ethically manufactured — fair trade</li>
+                <li>✓ Carbon-neutral delivery</li>
+                <li>✓ Lifetime quality guarantee</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- RELATED PRODUCTS -->
+    <% if (related.length > 0) { %>
+    <div class="related-section">
+        <h2>You Might Also Like</h2>
+        <div class="products-grid">
+            <% related.forEach(function(p) { %>
+            <div class="product-card">
+                <a href="/collections/<%= p._id %>" class="product-img-wrap">
+                    <% if (p.images && p.images.length > 0) { %>
+                        <img src="<%= p.images[0] %>" alt="<%= p.name %>">
+                    <% } else { %>
+                        <div class="img-placeholder"><%= p.category %></div>
+                    <% } %>
+                    <span class="product-hover-text">View Details</span>
+                </a>
+                <div class="product-info">
+                    <h3><%= p.name %></h3>
+                    <p class="product-price"><%= p.price %></p>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+    <% } %>
+</section>
+
+<a href="https://wa.me/<%= whatsapp %>" class="whatsapp-float" target="_blank" aria-label="WhatsApp">
+    <svg viewBox="0 0 32 32"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.837.745 5.496 2.048 7.798L0 32l8.398-2.048A15.935 15.935 0 0 0 16 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.356 21.957c-.403-.201-2.382-1.175-2.751-1.309-.369-.134-.637-.201-.906.201-.268.403-1.041 1.309-1.276 1.578-.235.268-.47.302-.873.101-.403-.201-1.701-.628-3.24-2.001-1.198-1.068-2.007-2.388-2.242-2.791-.235-.403-.025-.621.176-.822.181-.181.403-.47.604-.706.201-.235.268-.403.403-.672.134-.268.067-.502-.034-.706-.101-.201-.906-2.184-1.242-2.99-.327-.784-.66-.678-.906-.69-.235-.012-.502-.015-.77-.015s-.706.101-1.075.502c-.369.403-1.409 1.377-1.409 3.358s1.443 3.896 1.644 4.164c.201.268 2.837 4.332 6.874 6.074.961.415 1.711.663 2.296.848.965.307 1.843.264 2.537.16.774-.116 2.382-.974 2.717-1.914.335-.94.335-1.746.235-1.914-.101-.168-.369-.268-.772-.47z"/></svg>
+</a>
+
+<%- include('../partials/footer') %>
+<script>
+let selectedColor = '<%= product.colors[0]?.name || "" %>';
+let selectedSize  = '<%= product.sizes[0] || "" %>';
+
+function switchImg(el, src) {
+    document.getElementById('mainImg').src = src;
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('thumb--active'));
+    el.classList.add('thumb--active');
+}
+function selectColor(btn) {
+    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('color-btn--active'));
+    btn.classList.add('color-btn--active');
+    selectedColor = btn.dataset.color;
+    document.getElementById('selectedColorName').textContent = selectedColor;
+}
+function selectSize(btn) {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('size-btn--active'));
+    btn.classList.add('size-btn--active');
+    selectedSize = btn.dataset.size;
+}
+document.getElementById('buyNowBtn').addEventListener('click', function() {
+    const product = this.dataset.product;
+    const price   = this.dataset.price;
+    const wa      = this.dataset.wa;
+    if (!selectedColor) { alert('Please select a color'); return; }
+    if (!selectedSize)  { alert('Please select a size'); return; }
+    const msg = encodeURIComponent(
+        `Hi! I want to order:\n\n📦 *Product:* ${product}\n🎨 *Color:* ${selectedColor}\n📏 *Size:* ${selectedSize}\n💰 *Price:* ${price}\n\nPlease confirm availability. Thank you!`
+    );
+    window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
+});
+</script>
+<script src="/js/main.js"></script>
+</body>
+</html>

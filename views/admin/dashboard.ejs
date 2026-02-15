@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> – Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+<%- include('./partials/admin-sidebar') %>
+
+<div class="admin-main">
+    <%- include('./partials/admin-header', { pageTitle: 'Dashboard' }) %>
+    <%- include('../partials/flash') %>
+
+    <div class="admin-content">
+        <!-- STAT CARDS -->
+        <div class="stat-cards">
+            <div class="stat-card"><div class="stat-icon stat-blue">🛍️</div><div><h3><%= total %></h3><p>Total Products</p></div></div>
+            <div class="stat-card"><div class="stat-icon stat-green">✅</div><div><h3><%= active %></h3><p>Active Products</p></div></div>
+            <div class="stat-card"><div class="stat-icon stat-yellow">⭐</div><div><h3><%= featured %></h3><p>Featured</p></div></div>
+            <div class="stat-card"><div class="stat-icon stat-purple">📦</div><div><h3><%= byCategory.length %></h3><p>Categories</p></div></div>
+        </div>
+
+        <div class="dash-grid">
+            <!-- RECENT PRODUCTS -->
+            <div class="dash-panel">
+                <div class="panel-header"><h3>Recent Products</h3><a href="/admin/products/new" class="btn-sm">+ Add New</a></div>
+                <table class="mini-table">
+                    <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <% recent.forEach(function(p) { %>
+                        <tr>
+                            <td><a href="/admin/products/<%= p._id %>/edit"><%= p.name %></a></td>
+                            <td><span class="badge badge-<%= p.category.toLowerCase() %>"><%= p.category %></span></td>
+                            <td><%= p.price %></td>
+                            <td><span class="status-dot <%= p.active ? 'status-active' : 'status-off' %>"><%= p.active ? 'Active' : 'Off' %></span></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CATEGORY BREAKDOWN -->
+            <div class="dash-panel">
+                <div class="panel-header"><h3>By Category</h3></div>
+                <div class="cat-bars">
+                    <% byCategory.forEach(function(cat) { %>
+                    <div class="cat-bar-item">
+                        <span class="cat-name"><%= cat._id %></span>
+                        <div class="cat-bar-wrap">
+                            <div class="cat-bar" style="width: <%= Math.round((cat.count / total) * 100) %>%"></div>
+                        </div>
+                        <span class="cat-count"><%= cat.count %></span>
+                    </div>
+                    <% }) %>
+                </div>
+
+                <!-- QUICK ACTIONS -->
+                <div class="panel-header mt-3"><h3>Quick Actions</h3></div>
+                <div class="quick-actions">
+                    <a href="/admin/products/new" class="qa-btn">➕ Add Product</a>
+                    <a href="/admin/products" class="qa-btn">📋 All Products</a>
+                    <a href="/admin/settings" class="qa-btn">⚙️ Settings</a>
+                    <a href="/" target="_blank" class="qa-btn">🌐 View Store</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>

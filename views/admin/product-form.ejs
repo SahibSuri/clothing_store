@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> – Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+<%- include('./partials/admin-sidebar') %>
+<div class="admin-main">
+    <%- include('./partials/admin-header', { pageTitle: title }) %>
+    <%- include('../partials/flash') %>
+
+    <div class="admin-content">
+        <form method="POST"
+              action="<%= product ? '/admin/products/' + product._id + '?_method=PUT' : '/admin/products' %>"
+              enctype="multipart/form-data"
+              class="product-form" id="productForm">
+
+            <div class="form-grid">
+                <!-- LEFT COLUMN -->
+                <div class="form-col-left">
+                    <!-- Basic Info -->
+                    <div class="form-card">
+                        <h3 class="card-title">Basic Information</h3>
+                        <div class="field">
+                            <label>Product Name *</label>
+                            <input type="text" name="name" value="<%= product?.name || '' %>" placeholder="e.g., Nike Air Max Premium" required>
+                        </div>
+                        <div class="field">
+                            <label>Description *</label>
+                            <textarea name="description" rows="4" placeholder="Detailed product description..." required><%= product?.description || '' %></textarea>
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <label>Price *</label>
+                                <input type="text" name="price" value="<%= product?.price || '' %>" placeholder="$89.00" required>
+                            </div>
+                            <div class="field">
+                                <label>Brand</label>
+                                <input type="text" name="brand" value="<%= product?.brand || '' %>" placeholder="Nike, Adidas, Zara...">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Category *</label>
+                            <select name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Sportswear"  <%= product?.category==='Sportswear'?'selected':'' %>>Premium Sportswear</option>
+                                <option value="Essentials"  <%= product?.category==='Essentials'?'selected':'' %>>Contemporary Essentials</option>
+                                <option value="Streetwear"  <%= product?.category==='Streetwear'?'selected':'' %>>Luxury Streetwear</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Images -->
+                    <div class="form-card">
+                        <h3 class="card-title">Product Images</h3>
+                        <!-- Existing images -->
+                        <% if (product?.images?.length > 0) { %>
+                        <div class="existing-images">
+                            <p class="field-hint">Current images (uncheck to remove):</p>
+                            <div class="img-grid" id="existingImgGrid">
+                                <% product.images.forEach(function(img, i) { %>
+                                <div class="img-item" id="imgItem_<%= i %>">
+                                    <img src="<%= img %>" alt="">
+                                    <label class="img-keep">
+                                        <input type="checkbox" name="existingImages" value="<%= img %>" checked>
+                                        <span>Keep</span>
+                                    </label>
+                                </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                        <% } %>
+
+                        <div class="upload-zone" id="uploadZone">
+                            <div class="upload-icon">📁</div>
+                            <p>Drag & drop images or <label for="imageUpload" class="upload-label">browse files</label></p>
+                            <p class="field-hint">JPG, PNG, WebP · Max 5MB each · Up to 6 images</p>
+                            <input type="file" id="imageUpload" name="images" accept="image/*" multiple hidden>
+                        </div>
+                        <div id="newImgPreview" class="img-grid mt-2"></div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="form-col-right">
+                    <!-- Colors -->
+                    <div class="form-card">
+                        <h3 class="card-title">Available Colors</h3>
+                        <input type="hidden" name="colors" id="colorsInput" value="<%= product ? JSON.stringify(product.colors) : '[]' %>">
+                        <div class="color-builder">
+                            <div class="preset-colors">
+                                <% const presets = [{name:'Black',hex:'#000000'},{name:'White',hex:'#FFFFFF'},{name:'Navy',hex:'#001f3f'},{name:'Red',hex:'#FF4136'},{name:'Gray',hex:'#808080'},{name:'Beige',hex:'#F5F5DC'},{name:'Olive',hex:'#556B2F'},{name:'Burgundy',hex:'#800020'},{name:'Charcoal',hex:'#36454F'},{name:'Cream',hex:'#FFFDD0'}]; %>
+                                <% presets.forEach(function(c){ %>
+                                    <button type="button" class="preset-swatch"
+                                            data-name="<%= c.name %>" data-hex="<%= c.hex %>"
+                                            style="background:<%= c.hex %>; <%= c.hex==='#FFFFFF'||c.hex==='#FFFDD0'||c.hex==='#F5F5DC'?'border:1px solid #ccc;':'' %>"
+                                            title="<%= c.name %>">
+                                    </button>
+                                <% }) %>
+                            </div>
+                            <div class="custom-color-row">
+                                <input type="text"  id="ccName"  placeholder="Custom color name">
+                                <input type="color" id="ccHex"   value="#000000">
+                                <button type="button" id="addColorBtn">Add</button>
+                            </div>
+                            <div id="selectedColors" class="selected-colors-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Sizes -->
+                    <div class="form-card">
+                        <h3 class="card-title">Available Sizes</h3>
+                        <div class="sizes-grid">
+                            <% ['XS','S','M','L','XL','XXL'].forEach(function(s){ %>
+                            <label class="size-toggle">
+                                <input type="checkbox" name="sizes" value="<%= s %>" <%= product?.sizes?.includes(s)?'checked':'' %>>
+                                <span><%= s %></span>
+                            </label>
+                            <% }) %>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-card">
+                        <h3 class="card-title">Visibility</h3>
+                        <label class="switch-row">
+                            <span>Active (Show on website)</span>
+                            <label class="toggle-label">
+                                <input type="checkbox" name="active" <%= (!product || product.active)?'checked':'' %>>
+                                <span class="toggle-slider-sm"></span>
+                            </label>
+                        </label>
+                        <label class="switch-row mt-2">
+                            <span>Featured (Show on homepage)</span>
+                            <label class="toggle-label">
+                                <input type="checkbox" name="featured" <%= product?.featured?'checked':'' %>>
+                                <span class="toggle-slider-sm"></span>
+                            </label>
+                        </label>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="form-actions">
+                        <a href="/admin/products" class="btn-ghost-admin">Cancel</a>
+                        <button type="submit" class="btn-save">
+                            <%= product ? '💾 Update Product' : '✅ Save Product' %>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Initialize colors from existing product
+let colors = <%- product ? JSON.stringify(product.colors) : '[]' %>;
+renderColors();
+
+function renderColors() {
+    const container = document.getElementById('selectedColors');
+    document.getElementById('colorsInput').value = JSON.stringify(colors);
+    container.innerHTML = colors.length === 0
+        ? '<p class="field-hint">No colors selected yet.</p>'
+        : colors.map((c, i) => `
+            <div class="sel-color-item">
+                <span class="sel-swatch" style="background:${c.hex}; ${c.hex==='#ffffff'||c.hex==='#FFFFFF'?'border:1px solid #ccc':''}"></span>
+                <span>${c.name}</span>
+                <button type="button" onclick="removeColor(${i})">×</button>
+            </div>`).join('');
+}
+
+function addColor(name, hex) {
+    if (!name) return;
+    if (colors.find(c => c.name.toLowerCase() === name.toLowerCase())) return;
+    colors.push({ name, hex });
+    renderColors();
+}
+
+function removeColor(i) { colors.splice(i, 1); renderColors(); }
+
+// Preset clicks
+document.querySelectorAll('.preset-swatch').forEach(btn => {
+    btn.addEventListener('click', () => addColor(btn.dataset.name, btn.dataset.hex));
+});
+
+// Custom color
+document.getElementById('addColorBtn').addEventListener('click', () => {
+    const name = document.getElementById('ccName').value.trim();
+    const hex  = document.getElementById('ccHex').value;
+    if (!name) return alert('Enter color name');
+    addColor(name, hex);
+    document.getElementById('ccName').value = '';
+});
+
+// Image Upload Preview
+const zone  = document.getElementById('uploadZone');
+const input = document.getElementById('imageUpload');
+const prev  = document.getElementById('newImgPreview');
+
+zone.addEventListener('click', () => input.click());
+zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag-over'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    handleFiles(e.dataTransfer.files);
+});
+input.addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(files) {
+    Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            const d = document.createElement('div');
+            d.className = 'img-item';
+            d.innerHTML = `<img src="${e.target.result}" alt="">`;
+            prev.appendChild(d);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+</script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

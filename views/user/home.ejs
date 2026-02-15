@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <meta name="description" content="Brand Station – shop premium branded fashion. Nike, Adidas, Zara and more.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<%- include('../partials/navbar') %>
+
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="hero-bg-text">FASHION</div>
+    <div class="hero-content">
+        <p class="hero-eyebrow">New Season 2026</p>
+        <h1>ELEVATED<br><span>FASHION</span></h1>
+        <p class="hero-subtitle">Sustainable Luxury Meets Contemporary Style</p>
+        <div class="hero-cta-group">
+            <a href="/collections" class="btn-primary">Explore Collections</a>
+            <a href="/about" class="btn-outline">Our Story</a>
+        </div>
+    </div>
+    <div class="hero-scroll-hint">Scroll ↓</div>
+</section>
+
+<!-- FEATURED COLLECTIONS -->
+<section class="section collections-section" id="collections">
+    <div class="section-header">
+        <p class="eyebrow">Curated For You</p>
+        <h2>Featured Collections</h2>
+    </div>
+    <div class="collections-grid">
+        <% featured.forEach(function(product) { %>
+        <div class="collection-card" data-product-id="<%= product._id %>">
+            <div class="card-image">
+                <% if (product.images && product.images.length > 0) { %>
+                    <img src="<%= product.images[0] %>" alt="<%= product.name %>">
+                <% } else { %>
+                    <div class="img-placeholder"><%= product.category %></div>
+                <% } %>
+                <span class="card-badge"><%= product.category %></span>
+            </div>
+            <div class="card-body">
+                <h3><%= product.name %></h3>
+                <p class="card-desc"><%= product.description.substring(0,90) %>...</p>
+                <div class="card-footer">
+                    <span class="card-price"><%= product.price %></span>
+                    <a href="/collections/<%= product._id %>" class="card-link">View →</a>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+    <div class="text-center mt-4">
+        <a href="/collections" class="btn-outline">View All Collections</a>
+    </div>
+</section>
+
+<!-- BRAND MARQUEE -->
+<section class="marquee-section">
+    <div class="marquee-track">
+        <span>NIKE</span><span>ADIDAS</span><span>ZARA</span><span>PUMA</span>
+        <span>H&M</span><span>GUCCI</span><span>RALPH LAUREN</span><span>TOMMY HILFIGER</span>
+        <span>NIKE</span><span>ADIDAS</span><span>ZARA</span><span>PUMA</span>
+        <span>H&M</span><span>GUCCI</span><span>RALPH LAUREN</span><span>TOMMY HILFIGER</span>
+    </div>
+</section>
+
+<!-- VALUES -->
+<section class="section values-section">
+    <div class="values-grid">
+        <div class="value-card">
+            <div class="value-icon">🌿</div>
+            <h3>Sustainability First</h3>
+            <p>100% of our products use organic, recycled, or sustainably sourced materials.</p>
+        </div>
+        <div class="value-card">
+            <div class="value-icon">✅</div>
+            <h3>Ethical Production</h3>
+            <p>Fair wages and safe conditions throughout our entire supply chain.</p>
+        </div>
+        <div class="value-card">
+            <div class="value-icon">💎</div>
+            <h3>Quality Craftsmanship</h3>
+            <p>Each piece is designed to last — reducing waste, increasing joy.</p>
+        </div>
+        <div class="value-card">
+            <div class="value-icon">🌍</div>
+            <h3>Carbon Neutral</h3>
+            <p>We offset 100% of our shipping emissions on every order.</p>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials-section">
+    <div class="section-header">
+        <p class="eyebrow">Real Customers</p>
+        <h2>What People Say</h2>
+    </div>
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <p class="quote">"Brand Station transformed my wardrobe. The quality is unmatched and every piece is sustainably made."</p>
+            <div class="reviewer"><div class="avatar">JD</div><div><strong>Jessica Davis</strong><span>Fashion Blogger, NY</span></div></div>
+        </div>
+        <div class="testimonial-card">
+            <p class="quote">"I've been searching for a brand that combines luxury with sustainability. Brand Station exceeds every expectation."</p>
+            <div class="reviewer"><div class="avatar">MK</div><div><strong>Michael Kim</strong><span>Creative Director, LA</span></div></div>
+        </div>
+        <div class="testimonial-card">
+            <p class="quote">"The detail and commitment to ethical fashion sets Brand Station apart. Proud to wear pieces that align with my values."</p>
+            <div class="reviewer"><div class="avatar">AP</div><div><strong>Aisha Patel</strong><span>Sustainability Advocate, London</span></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/<%= whatsapp %>" class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 32 32"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.837.745 5.496 2.048 7.798L0 32l8.398-2.048A15.935 15.935 0 0 0 16 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.356 21.957c-.403-.201-2.382-1.175-2.751-1.309-.369-.134-.637-.201-.906.201-.268.403-1.041 1.309-1.276 1.578-.235.268-.47.302-.873.101-.403-.201-1.701-.628-3.24-2.001-1.198-1.068-2.007-2.388-2.242-2.791-.235-.403-.025-.621.176-.822.181-.181.403-.47.604-.706.201-.235.268-.403.403-.672.134-.268.067-.502-.034-.706-.101-.201-.906-2.184-1.242-2.99-.327-.784-.66-.678-.906-.69-.235-.012-.502-.015-.77-.015s-.706.101-1.075.502c-.369.403-1.409 1.377-1.409 3.358s1.443 3.896 1.644 4.164c.201.268 2.837 4.332 6.874 6.074.961.415 1.711.663 2.296.848.965.307 1.843.264 2.537.16.774-.116 2.382-.974 2.717-1.914.335-.94.335-1.746.235-1.914-.101-.168-.369-.268-.772-.47z"/></svg>
+</a>
+
+<%- include('../partials/footer') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

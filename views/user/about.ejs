@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<%- include('../partials/navbar') %>
+<section class="page-hero"><h1>Our Story</h1><p>Born from a passion for sustainable luxury</p></section>
+<section class="section about-section">
+    <div class="about-grid">
+        <div class="about-image-block"><div class="about-img-placeholder">OUR STORY</div></div>
+        <div class="about-text">
+            <h2>Where Luxury Meets Conscience</h2>
+            <p>Brand Station was born from a simple yet powerful vision: to create fashion that doesn't compromise on style, quality, or the planet. We believe that true luxury means honouring both craftsmanship and environmental responsibility.</p>
+            <p>Every piece in our collection tells a story of meticulous design, sustainable sourcing, and ethical production. We partner with brands like Zara, Nike, and Adidas to curate collections that represent the pinnacle of contemporary fashion.</p>
+            <p>Our mission extends beyond clothing. We're building a community of conscious consumers who understand that fashion can be a force for positive change. Each purchase supports fair labour practices and reduces environmental impact.</p>
+            <div class="about-values-grid">
+                <div class="av-item"><h4>🌿 Sustainability First</h4><p>100% organic, recycled, or sustainably sourced materials.</p></div>
+                <div class="av-item"><h4>✅ Ethical Production</h4><p>Fair wages and safe conditions throughout our supply chain.</p></div>
+                <div class="av-item"><h4>💎 Quality Craftsmanship</h4><p>Designed to last — reducing waste, maximising joy.</p></div>
+                <div class="av-item"><h4>🌍 Carbon Neutral</h4><p>100% of shipping emissions are offset on every order.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+<%- include('../partials/footer') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

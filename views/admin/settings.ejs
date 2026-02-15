@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings – Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+<%- include('./partials/admin-sidebar') %>
+<div class="admin-main">
+    <%- include('./partials/admin-header', { pageTitle: 'Settings' }) %>
+    <%- include('../partials/flash') %>
+    <div class="admin-content settings-wrap">
+        <form method="POST" action="/admin/settings" class="settings-form">
+            <!-- WhatsApp -->
+            <div class="form-card">
+                <h3 class="card-title">📱 WhatsApp Configuration</h3>
+                <div class="field">
+                    <label>WhatsApp Number</label>
+                    <input type="text" name="whatsapp" value="<%= adminDoc?.whatsapp || '' %>" placeholder="919205228939">
+                    <p class="field-hint">Format: country code + number (no + or spaces). e.g., 919876543210</p>
+                </div>
+            </div>
+            <!-- Password -->
+            <div class="form-card">
+                <h3 class="card-title">🔐 Change Password</h3>
+                <div class="field"><label>Current Password</label><input type="password" name="currentPassword" placeholder="••••••••"></div>
+                <div class="field"><label>New Password</label><input type="password" name="newPassword" placeholder="••••••••"></div>
+                <div class="field"><label>Confirm New Password</label><input type="password" name="confirmPassword" placeholder="••••••••"></div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-save">💾 Save Settings</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/js/admin.js"></script>
+</body>
+</html>
